@@ -1,16 +1,17 @@
 (ns solutions.fight
-  (:use [clojure.http.client :only (request url-encode)]
-        [clojure.contrib.json :only (read-json)]))
+  (:use [clojure.data.json :only (read-json)])
+  (:import (java.net URL URLEncoder)))
 
 (def google-search-base
   "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&q=")
 
-(use 'clojure.contrib.pprint)
+(defn url-encode [q]
+  (URLEncoder/encode q "UTF-8"))
 
 (defn estimated-hits-for
   [term]
-  (let [http-response (request (str google-search-base (url-encode term)))
-        json-response (read-json (apply str (:body-seq http-response)))]
+  (let [http-response (slurp (str google-search-base (url-encode term)))
+        json-response (read-json http-response)]
     (Long/parseLong (get-in json-response [:responseData :cursor :estimatedResultCount]))))
 
 (defn fight

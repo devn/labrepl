@@ -5,3 +5,6 @@ autodoc/*
 .circumspec/*
 log
 *~
+target
+/logs/labrepl.log
+.lein-failures

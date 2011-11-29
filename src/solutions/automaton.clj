@@ -18,7 +18,7 @@
 (defn with-coords [board]
   (for [[row-idx row] (map-indexed vector board)]
     (for [[col-idx val] (map-indexed vector row)]
-         [val row-idx col-idx])))
+      [val row-idx col-idx])))
 
 (defn without-coords [board]
   (for [row board]
@@ -41,8 +41,8 @@
   [above [_ cell _ :as row] below]
   (cond
    (= :on    cell)                              :dying
-   (= :dying cell)                              :off  
-   (= 2 (active-neighbors [above row below]))   :on   
+   (= :dying cell)                              :off
+   (= 2 (active-neighbors [above row below]))   :on
    :else                                        :off  ))
 
 (defn torus-window
@@ -65,7 +65,9 @@
   [board-ref]
   (swap! board-ref step))
 
-(def state->color {:on Color/WHITE :off Color/BLACK :dying Color/GRAY})
+(def state->color {:on java.awt.Color/WHITE
+                   :off java.awt.Color/BLACK
+                   :dying java.awt.Color/GRAY})
 
 (defn render-cell [g cell]
   (let [[state x y] cell
@@ -79,7 +81,7 @@
 (defn render [graphics img board]
   (let [background-graphics (.getGraphics img)]
     (doto background-graphics
-      (.setColor Color/BLACK)
+      (.setColor java.awt.Color/BLACK)
       (.fillRect 0 0 (dim-screen 0) (dim-screen 1)))
     (doseq [row (with-coords board)
             cell row]
@@ -89,51 +91,51 @@
 
 (defn activity-loop [panel board]
   (while
-   @board
-   (update-board board)
-   (.repaint panel)))
+      @board
+    (update-board board)
+    (.repaint panel)))
 
-(defn launch-1 [] 
+(defn launch-1 []
   (let [[screen-x screen-y] dim-screen
         board (atom (new-board))
-        frame (JFrame.)
-        panel (proxy [JPanel] [])]
+        frame (javax.swing.JFrame.)
+        panel (proxy [javax.swing.JPanel] [])]
     (doto frame
       (.add panel)
       (.pack)
       (.setSize screen-x screen-y)
       (.show)
-      (.setDefaultCloseOperation JFrame/DISPOSE_ON_CLOSE))
+      (.setDefaultCloseOperation javax.swing.JFrame/DISPOSE_ON_CLOSE))
     board))
 
-(defn launch-2 [] 
+(defn launch-2 []
   (let [[screen-x screen-y] dim-screen
         board (atom (new-board))
-        frame (JFrame.)
-        img   (BufferedImage. screen-x screen-y BufferedImage/TYPE_INT_ARGB)
-        panel (proxy [JPanel] []
+        frame (javax.swing.JFrame.)
+        img   (java.awt.image.BufferedImage. screen-x screen-y java.awt.image.BufferedImage/TYPE_INT_ARGB)
+        panel (proxy [javax.swing.JPanel] []
                 (paint [g] (render g img @board)))]
     (doto frame
       (.add panel)
       (.pack)
       (.setSize screen-x screen-y)
       (.show)
-      (.setDefaultCloseOperation JFrame/DISPOSE_ON_CLOSE))
+      (.setDefaultCloseOperation javax.swing.JFrame/DISPOSE_ON_CLOSE))
     board))
 
-(defn launch [] 
+(defn launch []
   (let [[screen-x screen-y] dim-screen
         board (atom (new-board))
-        frame (JFrame.)
-        img   (BufferedImage. screen-x screen-y BufferedImage/TYPE_INT_ARGB)
-        panel (proxy [JPanel] []
+        frame (javax.swing.JFrame.)
+        img   (java.awt.image.BufferedImage. screen-x screen-y java.awt.image.BufferedImage/TYPE_INT_ARGB)
+        panel (proxy [javax.swing.JPanel] []
                 (paint [g] (render g img @board)))]
     (doto frame
       (.add panel)
       (.pack)
       (.setSize screen-x screen-y)
       (.show)
-      (.setDefaultCloseOperation JFrame/DISPOSE_ON_CLOSE))
+      (.setDefaultCloseOperation javax.swing.JFrame/DISPOSE_ON_CLOSE))
     (future (activity-loop panel board))
     board))
 

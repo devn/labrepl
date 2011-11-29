@@ -1,9 +1,24 @@
-(ns
-    ^{:author "Stu Halloway"
-       :doc "Some Project Euler solutions. See projecteuler.net."}
+(ns ^{:author "Stu Halloway"
+      :doc "Some Project Euler solutions. See projecteuler.net."}
   solutions.project-euler
-  (:use clojure.contrib.lazy-seqs)
   (:require [clojure.string :as str]))
+
+;; Taken from c.c.lazy-seq
+(def ^{:doc "Lazy sequence of all the prime numbers."}
+  primes
+  (concat 
+   [2 3 5 7]
+   (lazy-seq
+    (let [primes-from
+	  (fn primes-from [n [f & r]]
+	    (if (some #(zero? (rem n %))
+		      (take-while #(<= (* % %) n) primes))
+	      (recur (+ n f) r)
+	      (lazy-seq (cons n (primes-from (+ n f) r)))))
+	  wheel (cycle [2 4 2 4 6 2 6 4 2 4 6 6 2 6  4  2
+			6 4 6 8 4 2 4 2 4 8 6 4 6 2  4  6
+			2 6 6 4 2 4 6 2 6 4 2 4 2 10 2 10])]
+      (primes-from 11 wheel)))))
 
 (defn divides?
   "Does divisor divide dividend evenly?"
@@ -11,7 +26,7 @@
   (zero? (rem dividend divisor)))
 
 (defn divides-any
-  "Return a predicate that tests whether its arg can be 
+  "Return a predicate that tests whether its arg can be
    evenly divided by any of nums."
   [& nums]
   (fn [arg]
@@ -81,9 +96,9 @@
   ([] (problem-4 1000))
   ([upper]
      (apply max
-      (for [x (range upper) y (range x upper) :when (let [s (str (* x y))]
-                                                    (= s (str/reverse s)))]
-        (* x y)))))
+            (for [x (range upper) y (range x upper) :when (let [s (str (* x y))]
+                                                            (= s (str/reverse s)))]
+              (* x y)))))
 
 (defn problem-5
   "2520 is the smallest number that can be divided by each of the numbers

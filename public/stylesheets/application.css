@@ -89,7 +89,7 @@ code.inline-syntax { color: #4C5770; font-family: "Consolas","Bitstream Vera San
 ol li { list-style-type: decimal; margin-left: 20px; }
 
 #header, #footer, #content {
-  width: 740px;
+  max-width: 740px;
   padding: 0 10px;
   margin: 0 auto;
 }
@@ -100,6 +100,10 @@ ol li { list-style-type: decimal; margin-left: 20px; }
 /* Header styles */
 #header { padding: 10px 0 0; }
 h2.logo { padding-left: 100px; height: 82px; background: url(clojure_logo.jpg) top left no-repeat; line-height: 82px;}
+
+#breadcrumb { height: 20px; }
+#breadcrumb #previous { float: left; }
+#breadcrumb #next {float: right }
 
 /* Content styles */
 #content { padding: 0 0 10px; }
